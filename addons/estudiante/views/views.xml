@@ -10,6 +10,7 @@
         <tree string="Estudiantes">
           <field name="name" />
           <field name="cel" />
+          <field name="nota" />
         </tree>
       </field>
     </record>
@@ -30,13 +31,17 @@
               <field name="name_curso" />
               <field name="name_tutor" />
               <field name="profesor_asignado" />
+              <field name="nota" />
+              <tree string="Notas">
+                <field name="materia" />
+                <field name="nota" />
+              </tree>
             </group>
           </sheet>
         </form>
       </field>
     </record>
 
-    <!-- vista para profesor -->
     <record model="ir.ui.view" id="profesor_list">
       <field name="name">profesor.list</field>
       <field name="model">estudiante.profesor</field>
@@ -46,7 +51,6 @@
           <field name="run" />
           <field name="fecha_nacimiento" />
           <field name="direccion" />
-          <field name="materia" />
           <field name="colegio" />
           <field name="correo" />
           <field name="celular" />
@@ -65,13 +69,50 @@
               <field name="run" />
               <field name="fecha_nacimiento" />
               <field name="direccion" />
-              <field name="materia" />
               <field name="colegio" />
               <field name="correo" />
               <field name="celular" />
+              <field name="materia">
+                <tree string="Materias">
+                  <field name="name" />
+                  <field name="curso" />
+                </tree>
+              </field>
             </group>
           </sheet>
         </form>
+      </field>
+    </record>
+
+
+    <!-- vista para notas -->
+    <record model="ir.ui.view" id="nota_form">
+      <field name="name">nota.form</field>
+      <field name="model">estudiante.nota</field>
+      <field name="arch" type="xml">
+        <form string="Notas">
+          <sheet>
+            <group>
+              <field name="nota" />
+              <field name="estudiante" />
+              <field name="materia" />
+              <field name="profesor" />
+              <field name="descripcion" />
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="nota_list">
+      <field name="name">nota.tree</field>
+      <field name="model">estudiante.nota</field>
+      <field name="arch" type="xml">
+        <tree string="Notas">
+          <field name="estudiante" />
+          <field name="materia" />
+          <field name="nota" />
+        </tree>
       </field>
     </record>
 
@@ -237,6 +278,12 @@
       <field name="view_mode">tree,form</field>
     </record>
 
+    <record model="ir.actions.act_window" id="estudiante.nota_action_window">
+      <field name="name">nota</field>
+      <field name="res_model">estudiante.nota</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
 
     <!-- server action to the one above -->
 
@@ -332,10 +379,19 @@
 
     <!-- actions -->
 
+    <!-- accion estudiante -->
     <menuitem name="Estudiante" id="estudiante.menu_1_list" parent="estudiante.menu_1"
       action="estudiante.action_window" />
+
+
+    <!-- accion profesor -->
     <menuitem name="Profesor" id="estudiante.menu_1_list_profesor" parent="estudiante.menu_2"
       action="estudiante.profesor_action_window" />
+
+    <menuitem name="nota" id="estudiante.menu_1_list_nota" parent="estudiante.menu_2"
+      action="estudiante.nota_action_window" />
+
+    <!-- acciones administrativas -->
     <menuitem name="Materia" id="estudiante.menu_1_list_materia" parent="estudiante.menu_3"
       action="estudiante.materia_action_window" />
     <menuitem name="Colegio" id="estudiante.menu_1_list_colegio" parent="estudiante.menu_3"
