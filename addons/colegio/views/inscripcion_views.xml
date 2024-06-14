@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="view_inscripcion_form" model="ir.ui.view">
+        <field name="name">colegio.inscripcion.form</field>
+        <field name="model">colegio.inscripcion</field>
+        <field name="arch" type="xml">
+            <form string="Formulario de Inscripción">
+                <group>
+                    <field name="name"/>
+                    <field name="fecha_nacimiento"/>
+                    <field name="direccion"/>
+                    <field name="telefono"/>
+                    <field name="email"/>
+                    <field name="grado"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree View -->
+    <record id="view_inscripcion_tree" model="ir.ui.view">
+        <field name="name">colegio.inscripcion.tree</field>
+        <field name="model">colegio.inscripcion</field>
+        <field name="arch" type="xml">
+            <tree string="Inscripciones">
+                <field name="name"/>
+                <field name="grado"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_inscripcion" model="ir.actions.act_window">
+        <field name="name">Inscripciones</field>
+        <field name="res_model">colegio.inscripcion</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_inscripcion_tree"/>
+    </record>
+</odoo>

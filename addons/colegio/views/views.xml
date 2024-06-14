@@ -1,52 +1,33 @@
 <odoo>
-  <data>
-    <!-- explicit list view definition -->
+    <data>
+        <!-- List View Definition for Colegio -->
+        <record model="ir.ui.view" id="colegio.list">
+            <field name="name">colegio.list</field>
+            <field name="model">colegio.colegio</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="telefono"/>
+                </tree>
+            </field>
+        </record>
 
-    <record model="ir.ui.view" id="colegio.list">
-      <field name="name">colegio list</field>
-      <field name="model">colegio.colegio</field>
-      <field name="arch" type="xml">
-        <tree>
-          <field name="name"/>
-          <field name="telefono"/>
-        </tree>
-      </field>
-    </record>
+        <!-- Action Opening Views on Colegio Model -->
+        <record model="ir.actions.act_window" id="colegio.action_window">
+            <field name="name">Colegio</field>
+            <field name="res_model">colegio.colegio</field>
+            <field name="view_mode">tree,form</field>
+        </record>
 
+        <!-- Top Menu Item -->
+        <!-- <menuitem name="Colegio" id="colegio.menu_root"/> -->
 
-    <!-- actions opening views on models -->
+        <!-- Menu Categories -->
+        <!-- <menuitem name="Menu 1" id="colegio.menu_1" parent="colegio.menu_root"/> -->
 
-    <record model="ir.actions.act_window" id="colegio.action_window">
-      <field name="name">colegio window</field>
-      <field name="res_model">colegio.colegio</field>
-      <field name="view_mode">tree,form</field>
-    </record>
-
-
-    <!-- server action to the one above -->
-
-    <!-- <record model="ir.actions.server" id="colegio.action_server">
-      <field name="name">colegio server</field>
-      <field name="model_id" ref="model_colegio_colegio"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": model._name,
-        }
-      </field>
-    </record> -->
-
-
-    <!-- Top menu item -->
-    <menuitem name="colegio" id="colegio.menu_root"/>
-
-    <!-- menu categories -->
-    <menuitem name="Menu 1" id="colegio.menu_1" parent="colegio.menu_root"/>
-
-    <!-- actions -->
-    <menuitem name="Inscripción" id="colegio.menu_1_list" parent="colegio.menu_1"
-              action="colegio.action_window"/>
-  </data>
+        <!-- Actions for Colegio -->
+        <!-- <menuitem name="List" id="colegio.menu_1_list" parent="colegio.menu_1" action="colegio.action_window"/> -->    
+        <!-- Actions for Inscripcion -->
+        <!-- <menuitem name="Inscripciones" id="colegio.menu_2_list" parent="colegio.menu_1" action="action_inscripcion"/> -->
+    </data>
 </odoo>
