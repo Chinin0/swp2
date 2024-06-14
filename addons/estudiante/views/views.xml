@@ -10,13 +10,6 @@
         <tree string="Estudiantes">
           <field name="name" />
           <field name="cel" />
-          <field name="correo" />
-          <field name="fecha_nacimiento" />
-          <field name="direccion" />
-          <field name="id_colegio" />
-          <field name="id_curso" />
-          <field name="id_tutor" />
-          <field name="profesor_asignado" />
         </tree>
       </field>
     </record>
@@ -33,9 +26,9 @@
               <field name="correo" />
               <field name="fecha_nacimiento" />
               <field name="direccion" />
-              <field name="id_colegio" />
-              <field name="id_curso" />
-              <field name="id_tutor" />
+              <field name="name_colegio" />
+              <field name="name_curso" />
+              <field name="name_tutor" />
               <field name="profesor_asignado" />
             </group>
           </sheet>
@@ -148,6 +141,7 @@
       <field name="arch" type="xml">
         <tree string="Cursos">
           <field name="name" />
+          <field name="profesor_de_curso" />
           <field name="descripcion" />
         </tree>
       </field>
@@ -161,6 +155,7 @@
           <sheet>
             <group>
               <field name="name" />
+              <field name="profesor_de_curso" />
               <field name="descripcion" />
             </group>
           </sheet>
@@ -330,6 +325,7 @@
 
     <!-- menu categories -->
 
+    <menuitem name="Administrador" id="estudiante.menu_3" parent="estudiante.menu_root" />
     <menuitem name="Estudiante" id="estudiante.menu_1" parent="estudiante.menu_root" />
     <menuitem name="Profesor" id="estudiante.menu_2" parent="estudiante.menu_root" />
 
@@ -340,13 +336,13 @@
       action="estudiante.action_window" />
     <menuitem name="Profesor" id="estudiante.menu_1_list_profesor" parent="estudiante.menu_2"
       action="estudiante.profesor_action_window" />
-    <menuitem name="Materia" id="estudiante.menu_1_list_materia" parent="estudiante.menu_2"
+    <menuitem name="Materia" id="estudiante.menu_1_list_materia" parent="estudiante.menu_3"
       action="estudiante.materia_action_window" />
-    <menuitem name="Colegio" id="estudiante.menu_1_list_colegio" parent="estudiante.menu_2"
+    <menuitem name="Colegio" id="estudiante.menu_1_list_colegio" parent="estudiante.menu_3"
       action="estudiante.colegio_action_window" />
-    <menuitem name="Curso" id="estudiante.menu_1_list_curso" parent="estudiante.menu_2"
+    <menuitem name="Curso" id="estudiante.menu_1_list_curso" parent="estudiante.menu_3"
       action="estudiante.curso_action_window" />
-    <menuitem name="tutor" id="estudiante.menu_1_list_tutor" parent="estudiante.menu_2"
+    <menuitem name="tutor" id="estudiante.menu_1_list_tutor" parent="estudiante.menu_3"
       action="estudiante.tutor_action_window" />
   </data>
 </odoo>

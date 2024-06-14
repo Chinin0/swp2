@@ -12,9 +12,9 @@ class Estudiante(models.Model):
     correo = fields.Char(string='Correo Electrónico')
     fecha_nacimiento = fields.Date(string='Fecha de Nacimiento')
     direccion = fields.Char(string='Dirección')
-    id_colegio = fields.Many2one('colegio.colegio', string='Colegio')
-    id_curso = fields.Many2one('curso.curso', string='Curso')
-    id_tutor = fields.Many2one('res.partner', string='Tutor')
+    name_colegio = fields.Many2one('estudiante.colegio', string='Colegio')
+    name_curso = fields.Many2one('estudiante.curso', string='Curso')
+    name_tutor = fields.Many2one('estudiante.tutor', string='Tutor')
     profesor_asignado = fields.Many2one('estudiante.profesor', string='Profesor Asignado')
 
 class profesor(models.Model):
@@ -54,6 +54,7 @@ class Curso(models.Model):
     _description = 'Curso'
 
     name = fields.Char(string='Nombre del Curso', required=True)
+    profesor_de_curso = fields.Many2one('estudiante.profesor', string='Profesor Asignado')
     descripcion = fields.Text(string='Descripción')
     
 class Tutor(models.Model):
