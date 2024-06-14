@@ -18,6 +18,15 @@ class Estudiante(models.Model):
     materia = fields.Many2many('estudiante.materia', string='materia')
     name_tutor = fields.Many2one('estudiante.tutor', string='Tutor')
     profesor_asignado = fields.Many2one('estudiante.profesor', string='Profesor Asignado')
+    promedio_notas = fields.Float(string='Promedio de Notas', compute='_compute_promedio_notas', store=True)
+    
+    @api.depends('nota')
+    def _compute_promedio_notas(self):
+        for estudiante in self:
+            total_notas = sum(nota.nota for nota in estudiante.nota)
+            count_notas = len(estudiante.nota)
+            estudiante.promedio_notas = total_notas / count_notas if count_notas > 0 else 0
+    
 
 class profesor(models.Model):
     _name = 'estudiante.profesor'

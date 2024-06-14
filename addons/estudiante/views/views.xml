@@ -10,7 +10,7 @@
         <tree string="Estudiantes">
           <field name="name" />
           <field name="cel" />
-          <field name="nota" />
+          <field name="promedio_notas" />
         </tree>
       </field>
     </record>
