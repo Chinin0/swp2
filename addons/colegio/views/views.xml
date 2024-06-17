@@ -1,7 +1,7 @@
 <odoo>
     <data>
         <!-- List View Definition for Colegio -->
-        <record model="ir.ui.view" id="colegio.list">
+        <!-- <record model="ir.ui.view" id="colegio.list">
             <field name="name">colegio.list</field>
             <field name="model">colegio.colegio</field>
             <field name="arch" type="xml">
@@ -10,14 +10,14 @@
                     <field name="telefono"/>
                 </tree>
             </field>
-        </record>
+        </record> -->
 
         <!-- Action Opening Views on Colegio Model -->
-        <record model="ir.actions.act_window" id="colegio.action_window">
+        <!-- <record model="ir.actions.act_window" id="colegio.action_window">
             <field name="name">Colegio</field>
             <field name="res_model">colegio.colegio</field>
             <field name="view_mode">tree,form</field>
-        </record>
+        </record> -->
 
         <!-- Top Menu Item -->
         <!-- <menuitem name="Colegio" id="colegio.menu_root"/> -->

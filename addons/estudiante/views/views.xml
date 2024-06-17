@@ -27,8 +27,8 @@
               <field name="correo" />
               <field name="fecha_nacimiento" />
               <field name="direccion" />
-              <field name="name_colegio" />
-              <field name="name_curso" />
+              <field name="name_infraestructura" />
+              <field name="name_aula" />
               <field name="name_tutor" />
               <field name="profesor_asignado" />
               <field name="nota" />
@@ -51,7 +51,7 @@
           <field name="run" />
           <field name="fecha_nacimiento" />
           <field name="direccion" />
-          <field name="colegio" />
+          <field name="infraestructura" />
           <field name="correo" />
           <field name="celular" />
         </tree>
@@ -69,13 +69,13 @@
               <field name="run" />
               <field name="fecha_nacimiento" />
               <field name="direccion" />
-              <field name="colegio" />
+              <field name="infraestructura" />
               <field name="correo" />
               <field name="celular" />
               <field name="materia">
                 <tree string="Materias">
                   <field name="name" />
-                  <field name="curso" />
+                  <field name="aula" />
                 </tree>
               </field>
             </group>
@@ -148,26 +148,27 @@
       </field>
     </record>
 
-    <!-- vista para colegio -->
-    <record model="ir.ui.view" id="colegio_list">
-      <field name="name">colegio.list</field>
-      <field name="model">estudiante.colegio</field>
+    <!-- vista para infraestructura -->
+    <record model="ir.ui.view" id="infraestructura_list">
+      <field name="name">infraestructura.list</field>
+      <field name="model">estudiante.infraestructura</field>
       <field name="arch" type="xml">
-        <tree string="Colegios">
+        <tree string="infraestructura">
           <field name="name" />
           <field name="direccion" />
         </tree>
       </field>
     </record>
 
-    <record model="ir.ui.view" id="colegio_form">
-      <field name="name">colegio.form</field>
-      <field name="model">estudiante.colegio</field>
+    <record model="ir.ui.view" id="infraestructura_form">
+      <field name="name">infraestructura.form</field>
+      <field name="model">estudiante.infraestructura</field>
       <field name="arch" type="xml">
-        <form string="Colegio">
+        <form string="infraestructura">
           <sheet>
             <group>
               <field name="name" />
+              <field name="nro_pisos" />
               <field name="direccion" />
             </group>
           </sheet>
@@ -175,28 +176,35 @@
       </field>
     </record>
 
-    <!-- vista para curso -->
-    <record model="ir.ui.view" id="curso_list">
-      <field name="name">curso.list</field>
-      <field name="model">estudiante.curso</field>
+    <!-- vista para aula -->
+    <record model="ir.ui.view" id="aula_list">
+      <field name="name">aula.list</field>
+      <field name="model">estudiante.aula</field>
       <field name="arch" type="xml">
-        <tree string="Cursos">
+        <tree string="Aula">
           <field name="name" />
-          <field name="profesor_de_curso" />
+          <field name="total_estudiantes" />
+          <field name="profesor_de_aula" />
           <field name="descripcion" />
         </tree>
       </field>
     </record>
 
-    <record model="ir.ui.view" id="curso_form">
-      <field name="name">curso.form</field>
-      <field name="model">estudiante.curso</field>
+    <record model="ir.ui.view" id="aula_form">
+      <field name="name">aula.form</field>
+      <field name="model">estudiante.aula</field>
       <field name="arch" type="xml">
-        <form string="Curso">
+        <form string="Aula">
           <sheet>
             <group>
               <field name="name" />
-              <field name="profesor_de_curso" />
+              <field name="total_estudiantes" />
+              <field name="nro_sillas" />
+              <field name="profesor_de_aula" />
+              <field name="descripcion" />
+            </group>
+            <group>
+              <field name="estudiante"/> <!-- <field name="estudiante" widget="many2many_tags" /> -->
               <field name="descripcion" />
             </group>
           </sheet>
@@ -260,15 +268,15 @@
       <field name="view_mode">tree,form</field>
     </record>
 
-    <record model="ir.actions.act_window" id="estudiante.colegio_action_window">
-      <field name="name">Colegio</field>
-      <field name="res_model">estudiante.colegio</field>
+    <record model="ir.actions.act_window" id="estudiante.infraestructura_action_window">
+      <field name="name">infraestructura</field>
+      <field name="res_model">estudiante.infraestructura</field>
       <field name="view_mode">tree,form</field>
     </record>
 
-    <record model="ir.actions.act_window" id="estudiante.curso_action_window">
-      <field name="name">Curso</field>
-      <field name="res_model">estudiante.curso</field>
+    <record model="ir.actions.act_window" id="estudiante.aula_action_window">
+      <field name="name">Aula</field>
+      <field name="res_model">estudiante.aula</field>
       <field name="view_mode">tree,form</field>
     </record>
 
@@ -326,9 +334,9 @@
       </field>
     </record>
 
-    <record model="ir.actions.server" id="estudiante.curso_action_server">
-      <field name="name">estudiante curso server</field>
-      <field name="model_id" ref="model_estudiante_curso" />
+    <record model="ir.actions.server" id="estudiante.aula_action_server">
+      <field name="name">estudiante aula server</field>
+      <field name="model_id" ref="model_estudiante_aula" />
       <field name="state">code</field>
       <field name="code">
         action = {
@@ -339,9 +347,9 @@
       </field>
     </record>
 
-    <record model="ir.actions.server" id="estudiante.colegio_action_server">
-      <field name="name">estudiante colegio server</field>
-      <field name="model_id" ref="model_estudiante_colegio" />
+    <record model="ir.actions.server" id="estudiante.infraestructura_action_server">
+      <field name="name">estudiante infraestructura server</field>
+      <field name="model_id" ref="model_estudiante_infraestructura" />
       <field name="state">code</field>
       <field name="code">
         action = {
@@ -394,10 +402,11 @@
     <!-- acciones administrativas -->
     <menuitem name="Materia" id="estudiante.menu_1_list_materia" parent="estudiante.menu_3"
       action="estudiante.materia_action_window" />
-    <menuitem name="Colegio" id="estudiante.menu_1_list_colegio" parent="estudiante.menu_3"
-      action="estudiante.colegio_action_window" />
-    <menuitem name="Curso" id="estudiante.menu_1_list_curso" parent="estudiante.menu_3"
-      action="estudiante.curso_action_window" />
+    <menuitem name="infraestructura" id="estudiante.menu_1_list_infraestructura"
+      parent="estudiante.menu_3"
+      action="estudiante.infraestructura_action_window" />
+    <menuitem name="Aula" id="estudiante.menu_1_list_aula" parent="estudiante.menu_3"
+      action="estudiante.aula_action_window" />
     <menuitem name="tutor" id="estudiante.menu_1_list_tutor" parent="estudiante.menu_3"
       action="estudiante.tutor_action_window" />
   </data>

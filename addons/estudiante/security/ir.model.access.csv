@@ -2,7 +2,7 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_estudiante_estudiante,estudiante.estudiante,model_estudiante_estudiante,base.group_user,1,1,1,1
 access_estudiante_profesor,estudiante.profesor,model_estudiante_profesor,base.group_user,1,1,1,1
 access_estudiante_materia,estudiante.materia,model_estudiante_materia,base.group_user,1,1,1,1
-access_estudiante_colegio,estudiante.colegio,model_estudiante_colegio,base.group_user,1,1,1,1
+access_estudiante_infraestructura,estudiante.infraestructura,model_estudiante_infraestructura,base.group_user,1,1,1,1
 access_estudiante_tutor,estudiante.tutor,model_estudiante_tutor,base.group_user,1,1,1,1
-access_estudiante_curso,estudiante.curso,model_estudiante_curso,base.group_user,1,1,1,1
+access_estudiante_aula,estudiante.aula,model_estudiante_aula,base.group_user,1,1,1,1
 access_estudiante_nota,estudiante.nota,model_estudiante_nota,base.group_user,1,1,1,1
