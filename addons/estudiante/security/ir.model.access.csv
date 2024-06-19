@@ -7,4 +7,5 @@ access_estudiante_tutor,estudiante.tutor,model_estudiante_tutor,base.group_user,
 access_estudiante_aula,estudiante.aula,model_estudiante_aula,base.group_user,1,1,1,1
 access_estudiante_nota,estudiante.nota,model_estudiante_nota,base.group_user,1,1,1,1
 access_estudiante_mensualidad,estudiante.mensualidad,model_estudiante_mensualidad,base.group_user,1,1,1,1
+access_estudiante_horario,estudiante.horario,model_estudiante_horario,base.group_user,1,1,1,1
 access_estudiante_tutor_estudiante_rel,estudiante.tutor_estudiante_rel,model_estudiante_tutor_estudiante_rel,base.group_user,1,1,1,1

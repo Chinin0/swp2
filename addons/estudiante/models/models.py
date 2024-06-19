@@ -22,7 +22,7 @@ class Estudiante(models.Model):
     profesor_asignado = fields.Many2one('estudiante.profesor', string='Profesor Asignado')
     promedio_notas = fields.Float(string='Promedio de Notas', compute='_compute_promedio_notas', store=True)
     mensualidad_ids = fields.One2many('estudiante.mensualidad', 'estudiante_id', string='Mensualidades')
-    
+    horario_ids = fields.Many2many('estudiante.horario', string='Horarios')
     @api.depends('nota')
     def _compute_promedio_notas(self):
         for estudiante in self:
@@ -116,6 +116,7 @@ class aula(models.Model):
         ('primaria', 'Primaria'),
         ('secundaria', 'Secundaria')
     ], string='Sección', required=True)
+    horario_ids = fields.One2many('estudiante.horario', 'aula_id', string='Horarios')
     name_infraestructura = fields.Many2one('estudiante.infraestructura', string='Colegio')
     
     @api.depends('estudiante')
@@ -193,3 +194,30 @@ class Mensualidad(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('estudiante.mensualidad') or 'Nuevo'
         result = super(Mensualidad, self).create(vals)
         return result
+
+
+
+class Horario(models.Model):
+    _name = 'estudiante.horario'
+    _description = 'Horario de Clases'
+
+    name = fields.Char(string='Clase', required=True)
+    aula_id = fields.Many2one('estudiante.aula', string='Aula', required=True)
+    materia_id = fields.Many2one('estudiante.materia', string='Materia', required=True)
+    profesor_id = fields.Many2one('estudiante.profesor', string='Profesor', required=True)
+    dia_semana = fields.Selection([
+        ('lunes', 'Lunes'),
+        ('martes', 'Martes'),
+        ('miercoles', 'Miércoles'),
+        ('jueves', 'Jueves'),
+        ('viernes', 'Viernes'),
+        ('sabado', 'Sábado')
+    ], string='Día de la Semana', required=True)
+    hora_inicio = fields.Float(string='Hora de Inicio', required=True)
+    hora_fin = fields.Float(string='Hora de Fin', required=True)
+
+    @api.constrains('hora_inicio', 'hora_fin')
+    def _check_hours(self):
+        for record in self:
+            if record.hora_inicio >= record.hora_fin:
+                raise ValidationError('La hora de inicio debe ser anterior a la hora de fin')

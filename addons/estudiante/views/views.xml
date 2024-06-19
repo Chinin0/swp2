@@ -45,6 +45,21 @@
                 </field>
               </page>
             </notebook>
+            <notebook>
+              <page string="Horarios">
+                <field name="horario_ids">
+                  <tree>
+                    <field name="name" />
+                    <field name="aula_id" />
+                    <field name="materia_id" />
+                    <field name="profesor_id" />
+                    <field name="dia_semana" />
+                    <field name="hora_inicio" />
+                    <field name="hora_fin" />
+                  </tree>
+                </field>
+              </page>
+            </notebook>
           </sheet>
         </form>
       </field>
@@ -223,6 +238,18 @@
               <field name="descripcion" />
             </group>
             <notebook>
+              <page string="Horarios">
+                <field name="horario_ids">
+                  <tree>
+                    <field name="name" />
+                    <field name="materia_id" />
+                    <field name="profesor_id" />
+                    <field name="dia_semana" />
+                    <field name="hora_inicio" />
+                    <field name="hora_fin" />
+                  </tree>
+                </field>
+              </page>
               <page string="Estudiantes">
                 <field name="estudiante">
                   <tree>
@@ -321,6 +348,44 @@
     </record>
 
 
+    <!-- vista de horarios -->
+    <record id="view_horario_list" model="ir.ui.view">
+      <field name="name">horario.list</field>
+      <field name="model">estudiante.horario</field>
+      <field name="arch" type="xml">
+        <tree string="Horarios">
+          <field name="name" />
+          <field name="aula_id" />
+          <field name="materia_id" />
+          <field name="profesor_id" />
+          <field name="dia_semana" />
+          <field name="hora_inicio" />
+          <field name="hora_fin" />
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_horario_form" model="ir.ui.view">
+      <field name="name">horario.form</field>
+      <field name="model">estudiante.horario</field>
+      <field name="arch" type="xml">
+        <form string="Horario">
+          <sheet>
+            <group>
+              <field name="name" />
+              <field name="aula_id" />
+              <field name="materia_id" />
+              <field name="profesor_id" />
+              <field name="dia_semana" />
+              <field name="hora_inicio" />
+              <field name="hora_fin" />
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+
     <!-- actions opening views on models -->
 
     <record model="ir.actions.act_window" id="estudiante.action_window">
@@ -388,6 +453,17 @@
       <field name="help" type="html">
         <p class="oe_view_nocontent_create">
           Crear la primera mensualidad
+        </p>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="estudiante.horario_action_window">
+      <field name="name">Horarios</field>
+      <field name="res_model">estudiante.horario</field>
+      <field name="view_mode">tree,form</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Crear el primer horario
         </p>
       </field>
     </record>
@@ -476,7 +552,7 @@
 
     <!-- Top menu item -->
 
-    <menuitem name="Estudiante" id="estudiante.menu_root" />
+    <menuitem name="Gestión Academica" id="estudiante.menu_root" />
 
     <!-- menu categories -->
 
@@ -512,6 +588,8 @@
 
     <menuitem name="Mensualidad" id="estudiante.menu_1_list_mensualidad" parent="estudiante.menu_3"
       action="estudiante.mesualidad_action_window" />
+    <menuitem name="Horario" id="estudiante.menu_1_list_horario" parent="estudiante.menu_1"
+      action="estudiante.horario_action_window" />
 
     <!-- <menuitem name="Relacion Tutor" id="estudiante.menu_1_tutor_estudiante_rel"
       parent="estudiante.menu_3"
