@@ -32,11 +32,19 @@
               <field name="name_tutor" />
               <field name="profesor_asignado" />
               <field name="nota" />
-              <tree string="Notas">
-                <field name="materia" />
-                <field name="nota" />
-              </tree>
             </group>
+            <notebook>
+              <page string="Mensualidades">
+                <field name="mensualidad_ids">
+                  <tree>
+                    <field name="name" />
+                    <field name="fecha_pago" />
+                    <field name="monto" />
+                    <field name="estado_pago" />
+                  </tree>
+                </field>
+              </page>
+            </notebook>
           </sheet>
         </form>
       </field>
@@ -156,6 +164,7 @@
         <tree string="infraestructura">
           <field name="name" />
           <field name="direccion" />
+          <field name="total_aulas" />
         </tree>
       </field>
     </record>
@@ -170,6 +179,7 @@
               <field name="name" />
               <field name="nro_pisos" />
               <field name="direccion" />
+              <field name="total_aulas" readonly="1" />
             </group>
           </sheet>
         </form>
@@ -183,9 +193,9 @@
       <field name="arch" type="xml">
         <tree string="Aula">
           <field name="name" />
-          <field name="total_estudiantes" />
+          <field name="seccion" />
           <field name="profesor_de_aula" />
-          <field name="descripcion" />
+          <field name="total_estudiantes" />
         </tree>
       </field>
     </record>
@@ -198,9 +208,13 @@
           <sheet>
             <group>
               <field name="name" />
+              <field name="grado" />
+              <field name="seccion" />
+              <field name="materia" widget="many2many_tags" options="{'no_create_edit': True}" />
               <field name="total_estudiantes" />
               <field name="nro_sillas" />
               <field name="profesor_de_aula" />
+              <field name="name_infraestructura" /> <!-- Campo agregado -->
               <field name="descripcion" />
             </group>
             <group>
@@ -273,6 +287,39 @@
       </field>
     </record>
 
+    <!-- vista de pagos -->
+    <record id="view_mensualidad_list" model="ir.ui.view">
+      <field name="name">mensualidad.list</field>
+      <field name="model">estudiante.mensualidad</field>
+      <field name="arch" type="xml">
+        <tree string="Mensualidades">
+          <field name="name" />
+          <field name="estudiante_id" />
+          <field name="fecha_pago" />
+          <field name="monto" />
+          <field name="estado_pago" />
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_mensualidad_form" model="ir.ui.view">
+      <field name="name">mensualidad.form</field>
+      <field name="model">estudiante.mensualidad</field>
+      <field name="arch" type="xml">
+        <form string="Mensualidad">
+          <sheet>
+            <group>
+              <field name="name" readonly="1" />
+              <field name="estudiante_id" />
+              <field name="fecha_pago" />
+              <field name="monto" />
+              <field name="estado_pago" />
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
 
     <!-- actions opening views on models -->
 
@@ -323,6 +370,27 @@
       <field name="res_model">estudiante.tutor_estudiante_rel</field>
       <field name="view_mode">tree,form</field>
     </record> -->
+
+
+    <record id="seq_mensualidad" model="ir.sequence">
+      <field name="name">Mensualidad</field>
+      <field name="code">estudiante.mensualidad</field>
+      <field name="prefix">PAG/</field>
+      <field name="padding">5</field>
+      <field name="number_increment">1</field>
+    </record>
+
+
+    <record model="ir.actions.act_window" id="estudiante.mesualidad_action_window">
+      <field name="name">Mensualidades</field>
+      <field name="res_model">estudiante.mensualidad</field>
+      <field name="view_mode">tree,form</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Crear la primera mensualidad
+        </p>
+      </field>
+    </record>
 
 
     <!-- server action to the one above -->
@@ -441,6 +509,10 @@
       action="estudiante.aula_action_window" />
     <menuitem name="tutor" id="estudiante.menu_1_list_tutor" parent="estudiante.menu_3"
       action="estudiante.tutor_action_window" />
+
+    <menuitem name="Mensualidad" id="estudiante.menu_1_list_mensualidad" parent="estudiante.menu_3"
+      action="estudiante.mesualidad_action_window" />
+
     <!-- <menuitem name="Relacion Tutor" id="estudiante.menu_1_tutor_estudiante_rel"
       parent="estudiante.menu_3"
       action="estudiante.tutor_estudiante_rel_window" /> -->

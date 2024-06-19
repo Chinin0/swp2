@@ -21,6 +21,7 @@ class Estudiante(models.Model):
     name_tutor = fields.Many2one('estudiante.tutor', string='Tutor')
     profesor_asignado = fields.Many2one('estudiante.profesor', string='Profesor Asignado')
     promedio_notas = fields.Float(string='Promedio de Notas', compute='_compute_promedio_notas', store=True)
+    mensualidad_ids = fields.One2many('estudiante.mensualidad', 'estudiante_id', string='Mensualidades')
     
     @api.depends('nota')
     def _compute_promedio_notas(self):
@@ -47,9 +48,17 @@ class profesor(models.Model):
 class materia(models.Model):
     _name = 'estudiante.materia'
     _description = 'estudiante.materia'
+    _order = 'grado'
 
     name = fields.Char()
-    grado = fields.Char()
+    grado = fields.Selection([
+        ('1', '1° Grado'),
+        ('2', '2° Grado'),
+        ('3', '3° Grado'),
+        ('4', '4° Grado'),
+        ('5', '5° Grado'),
+        ('6', '6° Grado'),
+    ], string='grado', required=True)
     seccion = fields.Selection([
         ('primaria', 'Primaria'),
         ('secundaria', 'Secundaria')
@@ -74,11 +83,19 @@ class infraestructura(models.Model):
 
     name = fields.Char(string='Nombre del colegio', required=True)
     nro_pisos = fields.Integer(string='Numero de pisos', required=True)
+    total_aulas = fields.Integer(string='Total de aulas', compute='_compute_total_aulas', store=True)
     direccion = fields.Char(string='Dirección')
+    aula_ids = fields.One2many('estudiante.aula', 'name_infraestructura', string='Aulas')
+    
+    @api.depends('aula_ids')
+    def _compute_total_aulas(self):
+        for infraestructura in self:
+            infraestructura.total_aulas = self.env['estudiante.aula'].search_count([('name_infraestructura', '=', infraestructura.id)])
 
 class aula(models.Model):
     _name = 'estudiante.aula'
     _description = 'Aula'
+    _order = 'name'
 
     name = fields.Char(string='Nombre del aula', required=True)
     estudiante = fields.One2many('estudiante.estudiante','name_aula', string='Estudiantes')
@@ -87,13 +104,38 @@ class aula(models.Model):
     profesor_de_aula = fields.Many2one('estudiante.profesor', string='Profesor Asignado')
     nro_sillas = fields.Integer(string='Numero de sillas', required=True)
     descripcion = fields.Text(string='Descripción')
+    grado = fields.Selection([
+        ('1', '1° Grado'),
+        ('2', '2° Grado'),
+        ('3', '3° Grado'),
+        ('4', '4° Grado'),
+        ('5', '5° Grado'),
+        ('6', '6° Grado'),
+    ], string='Grado', required=True)
+    seccion = fields.Selection([
+        ('primaria', 'Primaria'),
+        ('secundaria', 'Secundaria')
+    ], string='Sección', required=True)
+    name_infraestructura = fields.Many2one('estudiante.infraestructura', string='Colegio')
     
     @api.depends('estudiante')
     def _compute_total_estudiantes(self):
         for aula in self:
             aula.total_estudiantes = len(aula.estudiante)
             
+    """ @api.onchange('grado', 'seccion')
+    def _onchange_grado_seccion(self):
+        if self.grado and self.seccion:
+            return {'domain': {'materia': [('grado', '=', self.grado), ('seccion', '=', self.seccion)]}}
+        else:
+            return {'domain': {'materia': []}} """
+        
+    """ @api.depends('grado', 'seccion')
+    def _compute_materias(self):
+        for aula in self:
+            aula.materia = self.env['estudiante.materia'].search([('grado', '=', aula.grado), ('seccion', '=', aula.seccion)]) """
             
+                
 class TutorEstudianteRel(models.Model):
     _name = 'estudiante.tutor_estudiante_rel'
     _description = 'Relación entre Tutor y Estudiante'
@@ -129,3 +171,25 @@ class Tutor(models.Model):
                 }
             else:
                 raise UserError("El campo 'Celular' está vacío.")
+            
+            
+            
+class Mensualidad(models.Model):
+    _name = 'estudiante.mensualidad'
+    _description = 'Mensualidad'
+
+    name = fields.Char(string='Referencia de Pago')
+    estudiante_id = fields.Many2one('estudiante.estudiante', string='Estudiante', required=True)
+    fecha_pago = fields.Date(string='Fecha de Pago', required=True, default=fields.Date.context_today)
+    monto = fields.Float(string='Monto Pagado', required=True)
+    estado_pago = fields.Selection([
+        ('pendiente', 'Pendiente'),
+        ('pagado', 'Pagado'),
+    ], string='Estado del Pago', default='pendiente')
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', 'Nuevo') == 'Nuevo':
+            vals['name'] = self.env['ir.sequence'].next_by_code('estudiante.mensualidad') or 'Nuevo'
+        result = super(Mensualidad, self).create(vals)
+        return result
