@@ -9,6 +9,7 @@
       <field name="arch" type="xml">
         <tree string="Estudiantes">
           <field name="name" />
+          <field name="name_aula" string="Aula Asignada" />
           <field name="cel" />
           <field name="promedio_notas" />
         </tree>
@@ -28,7 +29,6 @@
               <field name="fecha_nacimiento" />
               <field name="direccion" />
               <field name="name_infraestructura" />
-              <field name="name_aula" />
               <field name="name_tutor" />
               <field name="profesor_asignado" />
               <field name="nota" />
@@ -204,13 +204,26 @@
               <field name="descripcion" />
             </group>
             <group>
-              <field name="estudiante"/> <!-- <field name="estudiante" widget="many2many_tags" /> -->
+              <!-- <field name="estudiante" /> -->
+              <field name="estudiante" widget="many2many_tags" />
               <field name="descripcion" />
             </group>
+            <notebook>
+              <page string="Estudiantes">
+                <field name="estudiante">
+                  <tree>
+                    <field name="name" />
+                    <field name="cel" />
+                    <field name="correo" />
+                  </tree>
+                </field>
+              </page>
+            </notebook>
           </sheet>
         </form>
       </field>
     </record>
+
 
     <!-- Vista de lista para Tutor -->
     <record model="ir.ui.view" id="tutor_list_view">
@@ -222,10 +235,10 @@
           <field name="cel" />
           <field name="correo" />
           <field name="direccion" />
-          <field name="relacion" />
         </tree>
       </field>
     </record>
+
 
     <!-- Vista de formulario para Tutor -->
     <record model="ir.ui.view" id="tutor_form_view">
@@ -236,12 +249,25 @@
           <sheet>
             <group>
               <field name="name" />
-              <field name="cel" />
               <field name="correo" />
               <field name="direccion" />
-              <field name="relacion" />
-              <field name="relacion_otros" modifiers="{'invisible': [('relacion', '!=', 'otros')]}" />
+              <field name="cel" />
+              <button name="action_send_whatsapp" type="object" string="Enviar WhatsApp"
+                class="oe_highlight" />
+              <!-- <separator string=""/> -->
             </group>
+            <notebook>
+              <page string="Estudiantes a Cargo">
+                <field name="estudiante_rel_ids">
+                  <tree editable="bottom">
+                    <field name="estudiante_id" />
+                    <field name="relacion" />
+                    <field name="relacion_otros"
+                      modifiers="{'invisible': [('relacion', '!=', 'otros')]}" />
+                  </tree>
+                </field>
+              </page>
+            </notebook>
           </sheet>
         </form>
       </field>
@@ -251,7 +277,7 @@
     <!-- actions opening views on models -->
 
     <record model="ir.actions.act_window" id="estudiante.action_window">
-      <field name="name">estudiante window</field>
+      <field name="name">Estudiante</field>
       <field name="res_model">estudiante.estudiante</field>
       <field name="view_mode">tree,form</field>
     </record>
@@ -291,6 +317,12 @@
       <field name="res_model">estudiante.nota</field>
       <field name="view_mode">tree,form</field>
     </record>
+
+    <!-- <record model="ir.actions.act_window" id="estudiante.tutor_estudiante_rel_window">
+      <field name="name">Tutor</field>
+      <field name="res_model">estudiante.tutor_estudiante_rel</field>
+      <field name="view_mode">tree,form</field>
+    </record> -->
 
 
     <!-- server action to the one above -->
@@ -376,7 +408,7 @@
 
     <!-- Top menu item -->
 
-    <menuitem name="estudiante" id="estudiante.menu_root" />
+    <menuitem name="Estudiante" id="estudiante.menu_root" />
 
     <!-- menu categories -->
 
@@ -409,5 +441,8 @@
       action="estudiante.aula_action_window" />
     <menuitem name="tutor" id="estudiante.menu_1_list_tutor" parent="estudiante.menu_3"
       action="estudiante.tutor_action_window" />
+    <!-- <menuitem name="Relacion Tutor" id="estudiante.menu_1_tutor_estudiante_rel"
+      parent="estudiante.menu_3"
+      action="estudiante.tutor_estudiante_rel_window" /> -->
   </data>
 </odoo>

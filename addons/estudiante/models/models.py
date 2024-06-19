@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from odoo import models, fields, api
+import webbrowser
 
 
 class Estudiante(models.Model):
     _name = 'estudiante.estudiante'
     _description = 'Estudiante'
+    _order = 'name'
 
     name = fields.Char(string='Nombre Completo', required=True)
     cel = fields.Char(string='Celular')
@@ -90,8 +92,21 @@ class aula(models.Model):
     def _compute_total_estudiantes(self):
         for aula in self:
             aula.total_estudiantes = len(aula.estudiante)
+            
+            
+class TutorEstudianteRel(models.Model):
+    _name = 'estudiante.tutor_estudiante_rel'
+    _description = 'Relación entre Tutor y Estudiante'
 
-    
+    tutor_id = fields.Many2one('estudiante.tutor', string='Tutor', required=True)
+    estudiante_id = fields.Many2one('estudiante.estudiante', string='Estudiante', required=True)
+    relacion = fields.Selection([
+        ('padre', 'Padre'),
+        ('madre', 'Madre'),
+        ('otros', 'Otro')
+    ], string='Relación con el Estudiante', required=True)
+    relacion_otros = fields.Char(string='Otra Relación')
+
 class Tutor(models.Model):
     _name = 'estudiante.tutor'
     _description = 'Tutor'
@@ -100,9 +115,17 @@ class Tutor(models.Model):
     cel = fields.Char(string='Celular')
     correo = fields.Char(string='Correo Electrónico')
     direccion = fields.Char(string='Dirección')
-    relacion = fields.Selection([
-        ('padre', 'Padre'),
-        ('madre', 'Madre'),
-        ('otros', 'Otros (escriba el tipo de relación)')
-    ], string='Relación con el Estudiante', required=True)
-    relacion_otros = fields.Char(string='Otra Relación')
+    estudiante_rel_ids = fields.One2many('estudiante.tutor_estudiante_rel', 'tutor_id', string='Estudiantes a Cargo')
+    
+    def action_send_whatsapp(self):
+        for record in self:
+            if record.cel:
+                phone_number = record.cel
+                whatsapp_url = f'https://api.whatsapp.com/send?phone={phone_number}'
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': whatsapp_url,
+                    'target': 'new',
+                }
+            else:
+                raise UserError("El campo 'Celular' está vacío.")
