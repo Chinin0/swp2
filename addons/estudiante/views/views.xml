@@ -165,6 +165,7 @@
               <field name="name" />
               <field name="grado" />
               <field name="seccion" />
+              <field name="aula_ids"/>
             </group>
           </sheet>
         </form>

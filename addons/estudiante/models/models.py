@@ -66,6 +66,14 @@ class materia(models.Model):
     profesor = fields.Many2one('estudiante.profesor', string='Profesor Asignado')
     aula = fields.Many2one('estudiante.aula', string='aula')
     nota = fields.Many2one('estudiante.nota', string='Notas')
+    total_estudiantes = fields.Integer(string='Total de Estudiantes', compute='_compute_total_estudiantes', store=True)
+    aula_ids = fields.Many2many('estudiante.aula', string='Aulas')
+    
+    @api.depends('aula_ids')
+    def _compute_total_estudiantes(self):
+        for materia in self:
+            total_estudiantes = sum(aula.total_estudiantes for aula in materia.aula_ids)
+            materia.total_estudiantes = total_estudiantes
     
 class nota(models.Model):
     _name = 'estudiante.nota'
@@ -123,6 +131,8 @@ class aula(models.Model):
     def _compute_total_estudiantes(self):
         for aula in self:
             aula.total_estudiantes = len(aula.estudiante)
+            for materia in aula.materia:
+                materia._compute_total_estudiantes()
             
     """ @api.onchange('grado', 'seccion')
     def _onchange_grado_seccion(self):
