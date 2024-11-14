@@ -1,0 +1,29 @@
+<odoo>
+    <data noupdate="1">
+
+        <!-- Definición de grupo Profesor -->
+        <record id="base.group_system" model="res.groups">
+            <field name="name">Administ-------</field>
+            <field name="category_id" ref="base.module_category_users" />
+        </record>
+        <!-- Grupo de Profesores -->
+        <record id="group_profesor" model="res.groups">
+            <field name="name">Profesor</field>
+            <field name="category_id" ref="base.module_category_education" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        </record>
+
+        <!-- Definición de grupo Tutor -->
+        <record id="group_tutor" model="res.groups">
+            <field name="name">Tutor</field>
+            <field name="category_id" ref="base.module_category_users" />
+        </record>
+
+        <!-- Grupo de Estudiantes -->
+        <record id="group_estudiante" model="res.groups">
+            <field name="name">Estudiante</field>
+            <field name="category_id" ref="base.module_category_education" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        </record>
+    </data>
+</odoo>

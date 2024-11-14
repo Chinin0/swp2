@@ -18,17 +18,21 @@ Long description of module's purpose
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': ['base', 'web', 'mail'],
 
     # always loaded
     'data': [
+        'security/groups.xml',
         'security/ir.model.access.csv',
         'views/views.xml',
         'views/templates.xml',
+        'security/foro_rules.xml',
     ],
     # only loaded in demonstration mode
     # 'demo': [
     #     'demo/demo.xml',
     # ],
+    'installable': True,
+    'auto_install': False,
 }
 

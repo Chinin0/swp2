@@ -32,6 +32,7 @@
               <field name="name_tutor" />
               <field name="profesor_asignado" />
               <field name="nota" />
+              <field name="password" />
             </group>
             <notebook>
               <page string="Mensualidades">
@@ -94,6 +95,7 @@
               <field name="direccion" />
               <field name="infraestructura" />
               <field name="correo" />
+              <field name="password" />
               <field name="celular" />
               <field name="materia">
                 <tree string="Materias">
@@ -104,6 +106,59 @@
             </group>
           </sheet>
         </form>
+      </field>
+    </record>
+
+    <!-- vista de foro -->
+    <record id="view_foro_form" model="ir.ui.view">
+      <field name="name">foro.form</field>
+      <field name="model">estudiante.foro</field>
+      <field name="arch" type="xml">
+        <form string="Foro">
+          <sheet>
+            <group>
+              <field name="name" />
+              <field name="materia_id" />
+              <field name="estudiante_ids" widget="many2many_tags" options="{'no_create': True}" />
+              <field name="mensaje_ids" widget="one2many_list">
+                <tree>
+                  <field name="estudiante_id" />
+                  <field name="contenido" />
+                  <field name="fecha" />
+                </tree>
+                <form>
+                  <group>
+                    <field name="contenido" />
+                    <!-- Campo de imagen que se muestra solo si no es inapropiada -->
+                    <field name="imagen" widget="image"
+                      attrs="{'invisible': [('es_inapropiado', '=', True)]}" />
+
+                    <!-- Mensaje de imagen inapropiada que se muestra solo si es inapropiada -->
+                    <label for="imagen" string="Imagen inapropiada"
+                      attrs="{'invisible': [('es_inapropiado', '=', False)]}" />
+                    <field name="imagen" widget="image" />
+                    <field name="audio" widget="audio" />
+                    <field name="video" widget="video" />
+                  </group>
+                </form>
+              </field>
+              <field name="aula_id" />
+              <field name="profesor_id" />
+              <field name="fecha_creacion" />
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_foro_tree" model="ir.ui.view">
+      <field name="name">foro.tree</field>
+      <field name="model">estudiante.foro</field>
+      <field name="arch" type="xml">
+        <tree string="Foros">
+          <field name="name" />
+          <field name="materia_id" />
+        </tree>
       </field>
     </record>
 
@@ -165,8 +220,138 @@
               <field name="name" />
               <field name="grado" />
               <field name="seccion" />
-              <field name="aula_ids"/>
+              <field name="aula_ids" />
             </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="view_materia_profesor_kanban" model="ir.ui.view">
+      <field name="name">estudiante.materia.profesor.kanban</field>
+      <field name="model">estudiante.materia.profesor</field>
+      <field name="arch" type="xml">
+        <kanban>
+          <field name="id" />
+          <field name="nombre_completo" />
+          <field name="materia_id" />
+          <field name="aula_id" />
+          <field name="profesor_id" />
+          <templates>
+            <t t-name="kanban-box">
+              <div class="oe_kanban_global_click">
+                <div class="oe_kanban_details">
+                  <strong class="o_kanban_record_title">
+                    <field name="nombre_completo" />
+                  </strong>
+                  <div class="o_kanban_record_bottom">
+                    <button name="action_ver_tareas"
+                      type="object"
+                      class="btn btn-primary"
+                      context="{'default_materia_profesor_id': id, 'default_profesor_id': profesor_id}">
+                      Ver Tareas
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+
+    <!-- Vista Tree para Tareas (actualizada) -->
+    <record id="view_tarea_tree" model="ir.ui.view">
+      <field name="name">estudiante.tarea.tree</field>
+      <field name="model">estudiante.tarea</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="titulo" />
+          <field name="materia_id" />
+          <field name="aula_id" />
+          <field name="fecha_asignacion" />
+          <field name="fecha_entrega" />
+          <field name="estado" />
+        </tree>
+      </field>
+    </record>
+
+    <!-- Vista Form para Tareas -->
+    <record id="view_tarea_form" model="ir.ui.view">
+      <field name="name">estudiante.tarea.form</field>
+      <field name="model">estudiante.tarea</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+            <button name="action_publicar"
+              string="Publicar"
+              type="object"
+              class="oe_highlight"
+              invisible="estado != 'borrador'" />
+            <field name="estado" widget="statusbar" />
+          </header>
+          <sheet>
+            <group>
+              <group>
+                <field name="titulo" />
+                <field name="materia_id" />
+                <field name="aula_id" />
+                <field name="profesor_id" invisible="1" />
+              </group>
+              <group>
+                <field name="fecha_asignacion" />
+                <field name="fecha_entrega" />
+                <field name="archivo_tarea"
+                  widget="binary"
+                  filename="nombre_archivo" />
+                <field name="nombre_archivo" invisible="1" />
+              </group>
+            </group>
+            <notebook>
+              <page string="Descripción">
+                <field name="descripcion" />
+              </page>
+              <page string="Entregas">
+                <field name="entrega_ids" readonly="1">
+                  <tree>
+                    <field name="estudiante_id" />
+                    <field name="fecha_entrega" />
+                    <field name="estado" />
+                    <field name="calificacion" />
+                  </tree>
+                </field>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- Vista Form para Entregas -->
+    <record id="view_entrega_tarea_form" model="ir.ui.view">
+      <field name="name">estudiante.entrega.tarea.form</field>
+      <field name="model">estudiante.entrega.tarea</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+              <group>
+                <field name="tarea_id" />
+                <field name="estudiante_id" />
+                <field name="fecha_entrega" />
+                <field name="estado" />
+              </group>
+              <group>
+                <field name="archivo_entrega" widget="binary" filename="nombre_archivo" />
+                <field name="nombre_archivo" invisible="1" />
+                <field name="calificacion" />
+              </group>
+            </group>
+            <notebook>
+              <page string="Comentarios">
+                <field name="comentario" />
+              </page>
+            </notebook>
           </sheet>
         </form>
       </field>
@@ -314,7 +499,6 @@
         </form>
       </field>
     </record>
-
     <!-- vista de pagos -->
     <record id="view_mensualidad_list" model="ir.ui.view">
       <field name="name">mensualidad.list</field>
@@ -386,8 +570,81 @@
       </field>
     </record>
 
+    <!-- Vista Tree para listar los mensajes -->
+    <record id="view_materia_chat_tree" model="ir.ui.view">
+      <field name="name">materia.chat.tree</field>
+      <field name="model">materia.chat</field>
+      <field name="arch" type="xml">
+        <tree string="Mensajes de la Materia" create="false" delete="false">
+          <field name="fecha_envio" />
+          <field name="estudiante_id" />
+          <field name="mensaje" />
+        </tree>
+      </field>
+    </record>
 
+    <record id="view_materia_chat_form" model="ir.ui.view">
+      <field name="name">materia.chat.form</field>
+      <field name="model">materia.chat</field>
+      <field name="arch" type="xml">
+        <form string="Enviar Mensaje">
+          <sheet>
+            <group>
+              <field name="materia_id" readonly="1" />
+              <field name="estudiante_id" readonly="1" />
+              <field name="mensaje" />
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
     <!-- actions opening views on models -->
+
+    <record id="action_materia_chat" model="ir.actions.act_window">
+      <field name="name">Chat de Materia</field>
+      <field name="res_model">materia.chat</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('materia_id', 'in', user.estudiante_ids.materia.ids)]</field>
+    </record>
+
+
+    <!-- Acción para mostrar las tareas al estudiante -->
+    <record id="action_tareas_estudiante" model="ir.actions.act_window">
+      <field name="name">Mis Tareas</field>
+      <field name="res_model">estudiante.tarea</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('aula_id.estudiante_ids.user_id', '=', uid)]</field>
+      <field name="context">{}</field>
+    </record>
+
+    <!-- Acción de ventana para Tareas -->
+    <record id="action_mis_tareas" model="ir.actions.act_window">
+      <field name="name">Mis Tareas</field>
+      <field name="res_model">estudiante.tarea</field>
+      <field name="view_mode">tree,form</field>
+      <!-- <field name="domain">[('profesor_id', '=', active_id)]</field> -->
+      <field name="domain">[('profesor_id.user_id', '=', uid)]</field>
+      <field name="context">{
+        'default_profesor_id': uid,
+        'search_default_profesor_id': uid
+        }</field>
+      <!-- <field name="context">{'default_profesor_id': active_id}</field> -->
+    </record>
+
+    <!-- Acción para el menú Mis Materias -->
+    <record id="action_mis_materias" model="ir.actions.act_window">
+      <field name="name">Mis Materias</field>
+      <field name="res_model">estudiante.materia.profesor</field>
+      <field name="view_mode">kanban,tree,form</field>
+      <field name="domain">[('profesor_id.user_id', '=', uid)]</field>
+    </record>
+
+    <record id="action_view_assignments" model="ir.actions.act_window">
+      <field name="name">Mis Asignaciones</field>
+      <field name="res_model">estudiante.asignacion</field>
+      <field name="view_mode">tree,form</field>
+      <field name="context">{'search_default_materia_id': 1}</field>
+    </record>
 
     <record model="ir.actions.act_window" id="estudiante.action_window">
       <field name="name">Estudiante</field>
@@ -399,6 +656,17 @@
       <field name="name">profesor window</field>
       <field name="res_model">estudiante.profesor</field>
       <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="estudiante.foro_action_window">
+      <field name="name">Foro</field>
+      <field name="res_model">estudiante.foro</field>
+      <field name="view_mode">tree,form</field>
+      <field name="help" type="html">
+        <p class="oe_view_nocontent_create">
+          Crear un debate
+        </p>
+      </field>
     </record>
 
     <record model="ir.actions.act_window" id="estudiante.materia_action_window">
@@ -469,7 +737,6 @@
       </field>
     </record>
 
-
     <!-- server action to the one above -->
 
     <record model="ir.actions.server" id="estudiante.action_server">
@@ -488,6 +755,19 @@
     <record model="ir.actions.server" id="estudiante.profesor_action_server">
       <field name="name">estudiante profesor server</field>
       <field name="model_id" ref="model_estudiante_profesor" />
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+        "type": "ir.actions.act_window",
+        "view_mode": "tree,form",
+        "res_model": model._name,
+        }
+      </field>
+    </record>
+
+    <record model="ir.actions.server" id="estudiante.foro_action_server">
+      <field name="name">estudiante foro server</field>
+      <field name="model_id" ref="model_estudiante_foro" />
       <field name="state">code</field>
       <field name="code">
         action = {
@@ -550,25 +830,35 @@
       </field>
     </record>
 
-
     <!-- Top menu item -->
 
     <menuitem name="Gestión Academica" id="estudiante.menu_root" />
 
     <!-- menu categories -->
 
-    <menuitem name="Administrador" id="estudiante.menu_3" parent="estudiante.menu_root" />
+
     <menuitem name="Estudiante" id="estudiante.menu_1" parent="estudiante.menu_root" />
     <menuitem name="Profesor" id="estudiante.menu_2" parent="estudiante.menu_root" />
+    <menuitem name="Administrador" id="estudiante.menu_3" parent="estudiante.menu_root" />
+    <menuitem name="Foro" id="estudiante.menu_4" parent="estudiante.menu_root"
+      action="estudiante.foro_action_window" />
 
+    <menuitem id="menu_estudiante_asignaciones" name="Mis Materias" parent="estudiante.menu_root"
+      action="action_view_assignments" />
+
+    <menuitem id="menu_mis_materias" name="Mis Materias" parent="menu_2"
+      action="action_mis_materias" sequence="10" />
+
+    <menuitem id="menu_mis_tareas" name="Mis Tareas" action="action_mis_tareas" parent="menu_2"
+      sequence="20" />
+    <!-- <menuitem id="menu_materia_chat" name="Chat de Materia" parent="estudiante.menu_root"
+      action="action_materia_chat" /> -->
 
     <!-- actions -->
 
     <!-- accion estudiante -->
     <menuitem name="Estudiante" id="estudiante.menu_1_list" parent="estudiante.menu_1"
       action="estudiante.action_window" />
-
-
     <!-- accion profesor -->
     <menuitem name="Profesor" id="estudiante.menu_1_list_profesor" parent="estudiante.menu_2"
       action="estudiante.profesor_action_window" />
@@ -592,8 +882,5 @@
     <menuitem name="Horario" id="estudiante.menu_1_list_horario" parent="estudiante.menu_1"
       action="estudiante.horario_action_window" />
 
-    <!-- <menuitem name="Relacion Tutor" id="estudiante.menu_1_tutor_estudiante_rel"
-      parent="estudiante.menu_3"
-      action="estudiante.tutor_estudiante_rel_window" /> -->
   </data>
 </odoo>

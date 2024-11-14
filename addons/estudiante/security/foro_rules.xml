@@ -1,0 +1,69 @@
+<odoo>
+    <data noupdate="1">
+        <!-- Regla de acceso al foro para estudiantes de la misma materia -->
+        <record id="foro_rule" model="ir.rule">
+            <field name="name">Acceso al foro de estudiantes de la misma materia</field>
+            <field name="model_id" ref="model_estudiante_foro" />
+            <field name="groups" eval="[(4, ref('group_estudiante'))]" />
+            <field name="domain_force">[('estudiante_ids.user_id', '=', uid)]</field>
+        </record>
+
+        <!-- Regla de acceso a los mensajes en foros -->
+        <record id="mensaje_rule" model="ir.rule">
+            <field name="name">Acceso a mensajes en foros de la misma materia</field>
+            <field name="model_id" ref="model_estudiante_mensaje" />
+            <field name="groups" eval="[(4, ref('group_estudiante'))]" />
+            <field name="domain_force">[('foro_id.estudiante_ids.user_id', '=', uid)]</field>
+        </record>
+
+        <record id="foro_estudiante_access" model="ir.model.access">
+            <field name="name">Acceso de estudiante a Foro</field>
+            <field name="model_id" ref="model_estudiante_foro" />
+            <field name="group_id" ref="group_estudiante" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="False" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_unlink" eval="False" />
+        </record>
+
+        <record id="mensaje_estudiante_access" model="ir.model.access">
+            <field name="name">Acceso de estudiante a Mensaje</field>
+            <field name="model_id" ref="model_estudiante_mensaje" />
+            <field name="group_id" ref="group_estudiante" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="False" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_unlink" eval="False" />
+        </record>
+
+        <!-- Acceso total para administradores -->
+        <record id="rule_foro_admin_access" model="ir.rule">
+            <field name="name">Acceso Total Foro para Administradores</field>
+            <field name="model_id" ref="model_estudiante_foro" />
+            <field name="groups" eval="[(4, ref('base.group_system'))]" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="True" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_unlink" eval="True" />
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="rule_mensaje_admin_access" model="ir.rule">
+            <field name="name">Acceso Total Mensaje para Administradores</field>
+            <field name="model_id" ref="model_estudiante_mensaje" />
+            <field name="groups" eval="[(4, ref('base.group_system'))]" />
+            <field name="perm_read" eval="True" />
+            <field name="perm_write" eval="True" />
+            <field name="perm_create" eval="True" />
+            <field name="perm_unlink" eval="True" />
+            <field name="domain_force">[(1, '=', 1)]</field>
+        </record>
+
+        <record id="materia_chat_rule" model="ir.rule">
+            <field name="name">Chat de materia restringido por inscripción</field>
+            <field name="model_id" ref="model_materia_chat" />
+            <field name="domain_force">[('estudiante_ids.user_id', '=', uid)]</field>
+            <field name="groups" eval="[(4, ref('estudiante.group_estudiante'))]" />
+        </record>
+    </data>
+</odoo>
